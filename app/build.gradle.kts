@@ -33,6 +33,8 @@ android {
 
 dependencies {
 
+    implementation("com.kizitonwose.calendar:view:2.4.0")
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

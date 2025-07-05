@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MedsApp</string>
+    <string name="selecione_a_caixa_que_pretende">Selecione a caixa que pretende</string>
+    <string name="adicionar_dispositivo">Adicionar dispositivo</string>
+    <string name="bem_vindo_de_volta">Bem-vindo de volta!</string>
 </resources>
