@@ -70,6 +70,15 @@ public class MainActivity extends AppCompatActivity {
             tvTitle.setText(d.getTitle());
             tvDesc.setText(d.getDescription());
 
+            // By clicking on the card, open the Box Activity
+            card.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, BoxPageActivity.class);
+                intent.putExtra("device_title", d.getTitle());
+                intent.putExtra("device_description", d.getDescription());
+                intent.putExtra("device_id", d.getId());
+                startActivity(intent);
+            });
+
             // Edit/Details Page button
             ImageButton editButton = card.findViewById(R.id.iconEdit);
             editButton.setOnClickListener(v -> {

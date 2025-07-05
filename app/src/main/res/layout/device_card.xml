@@ -61,7 +61,7 @@
             android:padding="4dp"
             android:contentDescription="Ver"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/sharp_arrow_forward_ios_24"
+            android:src="@drawable/ic_edit_details_icon"
             app:tint="#FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/tvDeviceDescription"
