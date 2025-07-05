@@ -1,5 +1,6 @@
 package com.example.medsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     //----------------UI Elements----------------------//
     //private EditText editTextTopic;
-    //private Button btnSubscribe;
+    private Button add_dispositivo_btn;
 
 
     //----------------MQTT Elements----------------------//
@@ -38,20 +39,19 @@ public class MainActivity extends AppCompatActivity {
 
         //editTextTopic = findViewById(R.id.editTextText2);
         //btnSubscribe = findViewById(R.id.PubTopicbutton);
+        add_dispositivo_btn = findViewById(R.id.addDispBTN);
 
         // In the future, subscribes to all topics set by the raspberry
         //mqttHandler.subscribe(topico);
 
-        /**Button listener
-        btnSubscribe.setOnClickListener(new View.OnClickListener(){
+        //Button listener
+        add_dispositivo_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String message = editTextTopic.getText().toString().trim();
-                if(!message.isEmpty()){
-                    publishMessage("testMqtt/topic",message);
-                }
+                Intent intent = new Intent(MainActivity.this, AddNewDevice.class);
+                startActivity(intent);
             }
-        });*/
+        });
     }
 
     /**
