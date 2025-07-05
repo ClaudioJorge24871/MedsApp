@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private Button add_dispositivo_btn;
     private LinearLayout deviceContainer;
 
+    private TextView emptyLabel;
+
 
     //----------------MQTT Elements----------------------//
     private static final String BROKER_URL = "tcp://192.168.1.186:1883";    // Broker URl for connection
@@ -47,9 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
         add_dispositivo_btn = findViewById(R.id.addDispBTN);
         deviceContainer = findViewById(R.id.linearLayout);
+        emptyLabel = findViewById(R.id.emptyLabel);
 
         // Load all saved devices
         List<Device> devices = DeviceStorage.getDevices(this);
+        if (devices.isEmpty()) { // If there are no devices, show an label for indication
+            emptyLabel.setVisibility(View.VISIBLE);
+        } else {
+            emptyLabel.setVisibility(View.GONE);
+        }
+
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (final Device d : devices) {
@@ -61,9 +70,20 @@ public class MainActivity extends AppCompatActivity {
             tvTitle.setText(d.getTitle());
             tvDesc.setText(d.getDescription());
 
+            // Edit/Details Page button
             ImageButton editButton = card.findViewById(R.id.iconEdit);
             editButton.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, DeviceDetails.class);
+                intent.putExtra("device_title", d.getTitle());
+                intent.putExtra("device_description", d.getDescription());
+                intent.putExtra("device_id", d.getId());
+                startActivity(intent);
+            });
+
+            // Remove device Page button
+            ImageButton removeButton = card.findViewById(R.id.iconDelete);
+            removeButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, RemoveDevice.class);
                 intent.putExtra("device_title", d.getTitle());
                 intent.putExtra("device_description", d.getDescription());
                 intent.putExtra("device_id", d.getId());

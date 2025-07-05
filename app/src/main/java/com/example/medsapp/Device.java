@@ -58,7 +58,18 @@ public class Device {
         );
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Device device = (Device) obj;
+        return id.equals(device.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
 
 

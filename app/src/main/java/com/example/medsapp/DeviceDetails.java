@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class DeviceDetails extends AppCompatActivity {
         EditText titleView = findViewById(R.id.tituloCaixaText);
         EditText descView = findViewById(R.id.descCaixaText);
         TextView idView = findViewById(R.id.idenCaixaText);
-        Button saveButton = findViewById(R.id.saveDetailsBTN);
+        Button saveButton = findViewById(R.id.saveBTN);
 
         // Receive data from the Intent
         String title = getIntent().getStringExtra("device_title");
