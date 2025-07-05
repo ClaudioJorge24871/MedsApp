@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,12 +28,13 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         mqttHandler = new MQTTHandler();
-        mqttHandler.connect(BROKER_URL,CLIENT_ID);
+        //mqttHandler.connect(BROKER_URL,CLIENT_ID);
 
         //editTextTopic = findViewById(R.id.editTextText2);
         //btnSubscribe = findViewById(R.id.PubTopicbutton);
