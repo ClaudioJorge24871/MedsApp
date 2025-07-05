@@ -2,20 +2,25 @@ package com.example.medsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     //----------------UI Elements----------------------//
-    //private EditText editTextTopic;
     private Button add_dispositivo_btn;
+    private LinearLayout deviceContainer;
 
 
     //----------------MQTT Elements----------------------//
@@ -34,12 +39,37 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        //----------Constructors
+
         mqttHandler = new MQTTHandler();
         //mqttHandler.connect(BROKER_URL,CLIENT_ID);
 
-        //editTextTopic = findViewById(R.id.editTextText2);
-        //btnSubscribe = findViewById(R.id.PubTopicbutton);
         add_dispositivo_btn = findViewById(R.id.addDispBTN);
+        deviceContainer = findViewById(R.id.linearLayout);
+
+        // Load all saved devices
+        List<Device> devices = DeviceStorage.getDevices(this);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (final Device d : devices) {
+            View card = inflater.inflate(R.layout.device_card, deviceContainer, false);
+
+            TextView tvTitle = card.findViewById(R.id.tvDeviceTitle);
+            TextView tvDesc  = card.findViewById(R.id.tvDeviceDescription);
+
+            tvTitle.setText(d.getTitle());
+            tvDesc.setText(d.getDescription());
+
+            // Optional: click on the card to go to details or subscribe to MQTT
+            card.setOnClickListener(v -> {
+                // e.g. open details or publish/subscribe:
+                // publishMessage("medbox/" + d.getId() + "/cmd", "status");
+                Toast.makeText(this, "Clicked “" + d.getTitle() + "”", Toast.LENGTH_SHORT).show();
+            });
+
+            deviceContainer.addView(card);
+        }
+
 
         // In the future, subscribes to all topics set by the raspberry
         //mqttHandler.subscribe(topico);
@@ -52,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     /**
