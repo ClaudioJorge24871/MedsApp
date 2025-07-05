@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     //----------------UI Elements----------------------//
-    private EditText editTextTopic;
-    private Button btnSubscribe;
+    //private EditText editTextTopic;
+    //private Button btnSubscribe;
 
 
     //----------------MQTT Elements----------------------//
@@ -34,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
         mqttHandler = new MQTTHandler();
         mqttHandler.connect(BROKER_URL,CLIENT_ID);
 
-        editTextTopic = findViewById(R.id.editTextText2);
-        btnSubscribe = findViewById(R.id.PubTopicbutton);
+        //editTextTopic = findViewById(R.id.editTextText2);
+        //btnSubscribe = findViewById(R.id.PubTopicbutton);
 
         // In the future, subscribes to all topics set by the raspberry
         //mqttHandler.subscribe(topico);
 
-        // Button listener
+        /**Button listener
         btnSubscribe.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     publishMessage("testMqtt/topic",message);
                 }
             }
-        });
+        });*/
     }
 
     /**
