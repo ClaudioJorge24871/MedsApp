@@ -26,7 +26,6 @@ public class DeviceDetails extends AppCompatActivity {
         EditText titleView = findViewById(R.id.tituloCaixaText);
         EditText descView = findViewById(R.id.descCaixaText);
         TextView idView = findViewById(R.id.idenCaixaText);
-        TextView boxNameView = findViewById(R.id.nomeCaixaTV);
         Button saveButton = findViewById(R.id.saveDetailsBTN);
 
         // Receive data from the Intent
@@ -34,7 +33,6 @@ public class DeviceDetails extends AppCompatActivity {
         String description = getIntent().getStringExtra("device_description");
         String id = getIntent().getStringExtra("device_id");
 
-        boxNameView.setText(title);
         titleView.setText(title);
         descView.setText(description);
         idView.setText(id);
