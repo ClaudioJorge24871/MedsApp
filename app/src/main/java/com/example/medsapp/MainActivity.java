@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,12 +61,15 @@ public class MainActivity extends AppCompatActivity {
             tvTitle.setText(d.getTitle());
             tvDesc.setText(d.getDescription());
 
-            // Optional: click on the card to go to details or subscribe to MQTT
-            card.setOnClickListener(v -> {
-                // e.g. open details or publish/subscribe:
-                // publishMessage("medbox/" + d.getId() + "/cmd", "status");
-                Toast.makeText(this, "Clicked “" + d.getTitle() + "”", Toast.LENGTH_SHORT).show();
+            ImageButton editButton = card.findViewById(R.id.iconEdit);
+            editButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, DeviceDetails.class);
+                intent.putExtra("device_title", d.getTitle());
+                intent.putExtra("device_description", d.getDescription());
+                intent.putExtra("device_id", d.getId());
+                startActivity(intent);
             });
+
 
             deviceContainer.addView(card);
         }
