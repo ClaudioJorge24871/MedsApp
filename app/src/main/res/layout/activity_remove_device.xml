@@ -10,6 +10,16 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="16dp">
 
+    <ImageView
+        android:id="@+id/backIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="Voltar"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/removerTitle"
