@@ -10,7 +10,7 @@
         android:layout_width="320dp"
         android:layout_height="51dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#067367"
+        android:backgroundTint="#077A6D"
         android:text="Guardar"
         android:textAlignment="center"
         android:textColorLink="#FFFFFF"

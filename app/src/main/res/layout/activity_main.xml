@@ -10,8 +10,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="318dp"
-        android:layout_height="409dp"
+        android:layout_width="347dp"
+        android:layout_height="424dp"
         android:layout_marginBottom="92dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +39,7 @@
         android:id="@+id/addDispBTN"
         android:layout_width="320dp"
         android:layout_height="51dp"
-        android:backgroundTint="#067367"
+        android:backgroundTint="#077a6d"
         android:text="@string/adicionar_dispositivo"
         android:textAlignment="center"
         android:textColorLink="#FFFFFF"

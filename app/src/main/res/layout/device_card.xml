@@ -1,32 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card:cardCornerRadius="8dp"
     card:cardElevation="4dp"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="#077A6D">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="12dp">
 
         <TextView
             android:id="@+id/tvDeviceTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="Device Title"/>
+            android:textColor="#FFFFFF"
+            android:text="Device Title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iconDelete"
+            />
 
         <TextView
             android:id="@+id/tvDeviceDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Device description goes here."/>
+            android:textColor="#FFFFFF"
+            android:text="Device description goes here."
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDeviceTitle"
+            app:layout_constraintEnd_toStartOf="@+id/iconDelete"
+            />
 
-    </LinearLayout>
+        <!-- Ícone de remover -->
+        <ImageButton
+            android:id="@+id/iconDelete"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="4dp"
+            android:contentDescription="Remover"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_baseline_delete_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tvDeviceDescription"
+            app:layout_constraintEnd_toStartOf="@+id/iconEdit"
+            app:tint="#FFFFFF"/>
+
+        <!-- Ícone de editar -->
+        <ImageButton
+            android:id="@+id/iconEdit"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="4dp"
+            android:contentDescription="Ver"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/sharp_arrow_forward_ios_24"
+            app:tint="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tvDeviceDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
