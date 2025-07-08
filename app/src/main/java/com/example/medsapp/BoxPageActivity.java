@@ -24,6 +24,8 @@ import java.util.Calendar;
 
 public class BoxPageActivity extends AppCompatActivity {
 
+    TextView LogsBox;
+
     //----------------MQTT Elements----------------------//
     private static final String BROKER_URL = "tcp://medsboxbroker.duckdns.org:1883";    // Broker URl for connection
     private static final String CLIENT_ID = "claudRPI";                     // Client Id
@@ -40,7 +42,7 @@ public class BoxPageActivity extends AppCompatActivity {
         TextView boxNameTitle = findViewById(R.id.boxNameView);
         EditText descText = findViewById(R.id.descricaoCaixaText);
         EditText identText = findViewById(R.id.identificadorCaixaText);
-        TextView LogsBox = findViewById(R.id.logsTextBox);
+        LogsBox = findViewById(R.id.logsTextBox);
 
         String title = getIntent().getStringExtra("device_title");
         String id = getIntent().getStringExtra("device_id");
@@ -76,7 +78,7 @@ public class BoxPageActivity extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("Message: " + message.toString());
+                changeLogBoxText(message);
             }
 
             @Override
@@ -106,6 +108,16 @@ public class BoxPageActivity extends AppCompatActivity {
         }
 
         return json;
+    }
+
+    /**
+     * Change the text view of Logs in view to the messages
+     * @param message
+     */
+    private void changeLogBoxText(MqttMessage message){
+        String oldText = LogsBox.getText().toString();
+        String newText = oldText + "\n" + message.toString();
+        LogsBox.setText(newText);
     }
 
     /**
