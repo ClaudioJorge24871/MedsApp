@@ -13,7 +13,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.Calendar;
 
 public class BoxPageActivity extends AppCompatActivity {
 
@@ -44,16 +48,48 @@ public class BoxPageActivity extends AppCompatActivity {
 
         // Send message to open the broker to the broker
         Button openBox = findViewById(R.id.abrirCaixaBTN);
+
+        //MQTT topic for this box
+        String topic = "medsbox/" + id + "/mybox";
+
+        // Set a listener to send the JSON message for the specified topic
         openBox.setOnClickListener(v -> {
-            String message = "Abre caixa de: " + id;            // Change this message in the future
-            String topic = "medsbox/" + id + "/abrecaixa";
+            // Building MQTT Json message
+            String message = buildJSONMessage("openbox", id).toString();
             publishMessage(topic, message);
         });
-
 
         // Go back arrow
         ImageView backIcon = findViewById(R.id.backIcon);
         backIcon.setOnClickListener(v -> finish());
+    }
+
+    /**
+     * Build the JSON message for raspberry to unload it
+     * @param command - Instruction for raspberry (open box or close box)
+     * @return
+     */
+    private JSONObject buildJSONMessage(String command, String id){
+        JSONObject json = new JSONObject();
+        try{
+            json.put("id",id);
+            json.put("command", command);
+            json.put("dayofweek",getDayOfWeek());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return json;
+    }
+
+    /**
+     * Returns the current day of week
+     * @return 1 = sunday, 2 = monday ... 7 = saturday
+     */
+    private int getDayOfWeek(){
+        Calendar calendar = Calendar.getInstance();
+        int curWeekDay = calendar.get(Calendar.DAY_OF_WEEK); // 1 = sunday, 2 = monday .. 7 = saturday
+        return curWeekDay;
     }
 
     /**
@@ -63,7 +99,6 @@ public class BoxPageActivity extends AppCompatActivity {
         mqttHandler = new MQTTHandler();
         mqttHandler.connect(BROKER_URL,CLIENT_ID);
     }
-
 
     /**
      * Publish a message topic
