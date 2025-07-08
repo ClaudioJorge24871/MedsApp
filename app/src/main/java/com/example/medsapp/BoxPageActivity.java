@@ -13,6 +13,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -37,6 +40,7 @@ public class BoxPageActivity extends AppCompatActivity {
         TextView boxNameTitle = findViewById(R.id.boxNameView);
         EditText descText = findViewById(R.id.descricaoCaixaText);
         EditText identText = findViewById(R.id.identificadorCaixaText);
+        TextView LogsBox = findViewById(R.id.logsTextBox);
 
         String title = getIntent().getStringExtra("device_title");
         String id = getIntent().getStringExtra("device_id");
@@ -50,13 +54,35 @@ public class BoxPageActivity extends AppCompatActivity {
         Button openBox = findViewById(R.id.abrirCaixaBTN);
 
         //MQTT topic for this box
-        String topic = "medsbox/" + id + "/mybox";
+        String topicPub = "medsbox/" + id + "/mybox";
 
         // Set a listener to send the JSON message for the specified topic
         openBox.setOnClickListener(v -> {
             // Building MQTT Json message
             String message = buildJSONMessage("openbox", id).toString();
-            publishMessage(topic, message);
+            publishMessage(topicPub, message);
+        });
+
+        //Subscribes to the LOGS topic
+        // The logs topic is where the RPI will send the states of the box
+        String topicSub = "medsbox/" + id + "/logs";
+        subscribeToTopic(topicSub);
+
+        mqttHandler.client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                System.out.println("Message: " + message.toString());
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
         });
 
         // Go back arrow

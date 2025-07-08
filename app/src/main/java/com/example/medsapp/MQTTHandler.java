@@ -1,7 +1,4 @@
 package com.example.medsapp;
-import android.content.Context;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -16,15 +13,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class MQTTHandler {
 
     // Client creation
-    private MqttClient client;
-
-    private MqttAndroidClient mqttClient;
-    private Context context;
-    private MessageListener messageListener;
-
-    public interface MessageListener {
-        void onMessageReceived(String topic, String message);
-    }
+    public MqttClient client;
 
     /**
      * Connection method
@@ -47,17 +36,6 @@ public class MQTTHandler {
             client.connect(connectOptions);
 
         }catch (MqttException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Disconnection method
-     */
-    public void disconnect(){
-        try{
-            client.disconnect();
-        }catch (MqttException e){
             throw new RuntimeException(e);
         }
     }
@@ -88,25 +66,14 @@ public class MQTTHandler {
         }
     }
 
-    private void setupCallback(){
-        mqttClient.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                String payload = new String(message.getPayload());
-                if (messageListener != null){
-                    messageListener.onMessageReceived(topic, payload);
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
+    /**
+     * Disconnection method
+     */
+    public void disconnect(){
+        try{
+            client.disconnect();
+        }catch (MqttException e){
+            throw new RuntimeException(e);
+        }
     }
 }
