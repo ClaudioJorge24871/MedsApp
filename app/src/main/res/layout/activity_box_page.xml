@@ -67,6 +67,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <TextView
+        android:id="@+id/identificadorCaixalabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="Atividade da caixa"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/abrirCaixaBTN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/identificadorCaixaText"
+        app:layout_constraintVertical_bias="0.161" />
+
     <EditText
         android:id="@+id/descricaoCaixaText"
         android:layout_width="324dp"
@@ -116,6 +130,7 @@
         android:layout_height="193dp"
         android:editable="false"
         android:focusable="false"
+        android:fontFamily="@font/jetbrains_mono_light"
         app:layout_constraintBottom_toTopOf="@+id/abrirCaixaBTN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.581"
