@@ -1,4 +1,9 @@
 package com.example.medsapp;
+import android.content.Context;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -12,6 +17,14 @@ public class MQTTHandler {
 
     // Client creation
     private MqttClient client;
+
+    private MqttAndroidClient mqttClient;
+    private Context context;
+    private MessageListener messageListener;
+
+    public interface MessageListener {
+        void onMessageReceived(String topic, String message);
+    }
 
     /**
      * Connection method
@@ -73,5 +86,27 @@ public class MQTTHandler {
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupCallback(){
+        mqttClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String payload = new String(message.getPayload());
+                if (messageListener != null){
+                    messageListener.onMessageReceived(topic, payload);
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
     }
 }
