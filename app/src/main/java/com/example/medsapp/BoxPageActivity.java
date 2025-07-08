@@ -20,7 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class BoxPageActivity extends AppCompatActivity {
 
@@ -115,8 +118,16 @@ public class BoxPageActivity extends AppCompatActivity {
      * @param message
      */
     private void changeLogBoxText(MqttMessage message){
+        // get the old text
         String oldText = LogsBox.getText().toString();
-        String newText = oldText + "\n" + message.toString();
+
+        // Gets the hour of the message
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String currentTime = sdf.format(new Date());
+
+        //Builds the new text
+        String newText = oldText + "\n[" + currentTime + "] " + message.toString();
+
         LogsBox.setText(newText);
     }
 
