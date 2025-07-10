@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView emptyLabel;
 
-     // Mqtt object
-
     /**
      * On app creation
      * @param savedInstanceState

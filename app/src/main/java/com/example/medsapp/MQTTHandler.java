@@ -1,4 +1,6 @@
 package com.example.medsapp;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -11,7 +13,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class MQTTHandler {
 
     // Client creation
-    private MqttClient client;
+    public MqttClient client;
 
     /**
      * Connection method
@@ -39,17 +41,6 @@ public class MQTTHandler {
     }
 
     /**
-     * Disconnection method
-     */
-    public void disconnect(){
-        try{
-            client.disconnect();
-        }catch (MqttException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Publish method
      * @param topic
      * @param message
@@ -71,6 +62,17 @@ public class MQTTHandler {
         try{
             client.subscribe(topic);
         } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Disconnection method
+     */
+    public void disconnect(){
+        try{
+            client.disconnect();
+        }catch (MqttException e){
             throw new RuntimeException(e);
         }
     }
