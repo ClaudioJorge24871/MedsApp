@@ -61,7 +61,19 @@ public class AddNewDevice extends AppCompatActivity {
                 }
             });
         }else{ // Add a network
-            // Open the browser to insert the SSID and Password of the desired network
+            addDeviceButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    // Open the browser to insert the SSID and Password of the desired network
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                    browserIntent.setData(android.net.Uri.parse("http://192.168.4.1"));
+                    startActivity(browserIntent);
+
+                    // If there's a network
+                    // Change the text of the button
+                    addDeviceButton.setText("Guardar");
+                }
+            });
         }
 
         // Go back arrow
