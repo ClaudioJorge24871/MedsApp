@@ -108,8 +108,8 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="291dp"
-        android:layout_height="104dp"
+        android:layout_width="288dp"
+        android:layout_height="132dp"
         android:fontFamily="@font/jetbrains_mono_light"
         android:text="Para adicionar uma rede, aproxime-se da caixa, conecte-se à rede &quot;MicroPython-AP&quot; no seu telemovel e clique no botão de &quot;Adicionar Rede&quot;"
         android:textAlignment="center"
@@ -121,4 +121,25 @@
         app:layout_constraintTop_toBottomOf="@+id/redeLabel"
         app:layout_constraintVertical_bias="0.178" />
 
+    <LinearLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="32dp">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/loadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A tentar ligar à rede..."
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

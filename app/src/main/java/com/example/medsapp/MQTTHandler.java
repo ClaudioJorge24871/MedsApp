@@ -34,6 +34,7 @@ public class MQTTHandler {
 
             //Connect the broker
             client.connect(connectOptions);
+            System.out.println("conectado");
 
         }catch (MqttException e) {
             throw new RuntimeException(e);
