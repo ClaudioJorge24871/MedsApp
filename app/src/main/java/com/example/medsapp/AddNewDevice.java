@@ -31,6 +31,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import android.os.Handler;
+import android.widget.Toast;
 
 public class AddNewDevice extends AppCompatActivity {
 
@@ -39,8 +40,12 @@ public class AddNewDevice extends AppCompatActivity {
     private EditText deviceId;
     private EditText deviceDescription;
 
+    private ConnectivityManager.NetworkCallback internetNetworkCallback;
+
     private ConnectivityManager connectivityManager;
     private WebView setupWebView;
+
+    private Button hideButton;
 
     private LinearLayout loadingLayout;
 
@@ -59,17 +64,80 @@ public class AddNewDevice extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_new_device);
 
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
         addDeviceButton = findViewById(R.id.addNewDeviceBTN);
         deviceId = findViewById(R.id.IdentificadorText);
         deviceTitle = findViewById(R.id.tituloText);
         deviceDescription = findViewById(R.id.desText);
 
-        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         setupWebView = findViewById(R.id.setupWebView);
+
+        hideButton = findViewById(R.id.hideWebViewButton);
+
+        hideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideButton.setEnabled(false);
+
+                // Unbind from ESP-CONFIG network immediately
+                connectivityManager.bindProcessToNetwork(null);
+
+                // Request a network with internet (automatically excludes ESP-CONFIG)
+                NetworkRequest normalRequest = new NetworkRequest.Builder()
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        .build();
+
+                internetNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                    @Override
+                    public void onAvailable(Network network) {
+                        runOnUiThread(() -> {
+                            // Hide WebView immediately
+                            setupWebView.setVisibility(View.GONE);
+                            hideButton.setVisibility(View.INVISIBLE);
+
+                            // Start loading screen
+                            connectToNetworkAndBroker();
+                        });
+                        unregisterInternetNetworkCallback(); // Cleanup callback
+                    }
+
+                    @Override
+                    public void onUnavailable() {
+                        runOnUiThread(() -> {
+                            Toast.makeText(AddNewDevice.this, "No internet network found", Toast.LENGTH_SHORT).show();
+                            hideButton.setEnabled(true);
+                        });
+                        unregisterInternetNetworkCallback(); // Cleanup callback
+                    }
+                };
+
+                // Register network request
+                connectivityManager.requestNetwork(normalRequest, internetNetworkCallback);
+
+                // Add timeout (e.g., 15 seconds)
+                new Handler().postDelayed(() -> {
+                    if (internetNetworkCallback != null) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(AddNewDevice.this, "Network search timed out", Toast.LENGTH_SHORT).show();
+                            hideButton.setEnabled(true);
+                        });
+                        unregisterInternetNetworkCallback();
+                    }
+                }, 15000);
+            }
+        });
+
 
         addDeviceButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if (deviceId.getText().toString().trim().isEmpty()){
+                    deviceId.setError("Obrigatório");
+                    return;
+                }
+
                 WifiNetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                         .setSsid("ESP-CONFIG")
                         .setWpa2Passphrase("12345678")
@@ -91,6 +159,7 @@ public class AddNewDevice extends AppCompatActivity {
                         runOnUiThread(() -> {
                             setupWebView.getSettings().setJavaScriptEnabled(true);
                             setupWebView.setVisibility(View.VISIBLE);
+                            hideButton.setVisibility(View.VISIBLE);
                             setupWebView.setWebViewClient(new WebViewClient());
                             setupWebView.loadUrl("http://192.168.4.1");
                         });
@@ -114,12 +183,14 @@ public class AddNewDevice extends AppCompatActivity {
         backIcon.setOnClickListener(v -> finish());
     }
 
-    @Override
-    public void onRestart(){
-        super.onRestart();
+    private void unregisterInternetNetworkCallback() {
+        if (internetNetworkCallback != null) {
+            connectivityManager.unregisterNetworkCallback(internetNetworkCallback);
+            internetNetworkCallback = null;
+        }
+    }
 
-        connectivityManager.bindProcessToNetwork(null);
-        setupWebView.setVisibility(View.GONE);
+    public void connectToNetworkAndBroker(){
 
         loadingLayout = findViewById(R.id.loadingLayout);
         TextView semRedeLabel = findViewById(R.id.textView3);
@@ -222,6 +293,7 @@ public class AddNewDevice extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
+        unregisterInternetNetworkCallback();
         if (mqttHandler != null) {
             mqttHandler.disconnect();
         }
