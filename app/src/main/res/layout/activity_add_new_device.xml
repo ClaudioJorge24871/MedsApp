@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
+    <!-- All other views remain unchanged -->
     <ImageView
         android:id="@+id/backIcon"
         android:layout_width="24dp"
@@ -111,7 +111,7 @@
         android:layout_width="288dp"
         android:layout_height="132dp"
         android:fontFamily="@font/jetbrains_mono_light"
-        android:text="Para adicionar uma rede, aproxime-se da caixa, conecte-se à rede &quot;MicroPython-AP&quot; no seu telemovel e clique no botão de &quot;Adicionar Rede&quot;"
+        android:text='Para adicionar uma rede, aproxime-se da caixa, clique no botao da mesma, e depois em "Adicionar Rede"'
         android:textAlignment="center"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/addNewDeviceBTN"
@@ -142,4 +142,15 @@
             android:text="A tentar ligar à rede..."
             android:layout_marginTop="16dp" />
     </LinearLayout>
+
+    <!-- WebView moved to bottom to appear above all elements -->
+    <WebView
+        android:id="@+id/setupWebView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
