@@ -1,10 +1,20 @@
 package com.example.medsapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.net.Uri;
+import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +39,9 @@ public class AddNewDevice extends AppCompatActivity {
     private EditText deviceId;
     private EditText deviceDescription;
 
+    private ConnectivityManager connectivityManager;
+    private WebView setupWebView;
+
     private LinearLayout loadingLayout;
 
     private Handler timeoutHandler = new Handler();
@@ -51,13 +64,47 @@ public class AddNewDevice extends AppCompatActivity {
         deviceTitle = findViewById(R.id.tituloText);
         deviceDescription = findViewById(R.id.desText);
 
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        setupWebView = findViewById(R.id.setupWebView);
+
         addDeviceButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                // Open the browser to insert the SSID and Password of the desired network
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                browserIntent.setData(android.net.Uri.parse("http://192.168.4.1"));
-                startActivity(browserIntent);
+                WifiNetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
+                        .setSsid("ESP-CONFIG")
+                        .setWpa2Passphrase("12345678")
+                        .build();
+
+                NetworkRequest request = new NetworkRequest.Builder()
+                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .setNetworkSpecifier(specifier)
+                        .build();
+
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+                    @Override
+                    public void onAvailable(Network network) {
+                        connectivityManager.bindProcessToNetwork(network);
+
+                        runOnUiThread(() -> {
+                            setupWebView.getSettings().setJavaScriptEnabled(true);
+                            setupWebView.setVisibility(View.VISIBLE);
+                            setupWebView.setWebViewClient(new WebViewClient());
+                            setupWebView.loadUrl("http://192.168.4.1");
+                        });
+
+                    }
+
+                    @Override
+                    public void onLost(Network network) {
+                        connectivityManager.bindProcessToNetwork(null);
+                    }
+                };
+
+                connectivityManager.requestNetwork(request, networkCallback);
+
 
             }
         });
@@ -71,12 +118,19 @@ public class AddNewDevice extends AppCompatActivity {
     public void onRestart(){
         super.onRestart();
 
+        connectivityManager.bindProcessToNetwork(null);
+        setupWebView.setVisibility(View.GONE);
+
         loadingLayout = findViewById(R.id.loadingLayout);
         TextView semRedeLabel = findViewById(R.id.textView3);
         loadingLayout.setVisibility(View.VISIBLE);
         semRedeLabel.setText("A tentar ligar a caixa à rede... \n Isto pode demorar algum tempo, por favor não saia da aplicação");
 
         connectToBroker();
+
+        if (deviceId.getText().toString().trim().isEmpty()) {
+            deviceId.setError("Obrigatório");
+        }
 
         String topicSub = "medsbox/" + deviceId.getText().toString().trim() + "/statusNet";
         subscribeToTopic(topicSub);
@@ -146,8 +200,8 @@ public class AddNewDevice extends AppCompatActivity {
                 String description = deviceDescription.getText().toString().trim();
 
                 if(id.isEmpty() || title.isEmpty()){
-                    deviceId.setError("Required");
-                    deviceId.setError("Required");
+                    deviceId.setError("Obrigatório");
+                    deviceTitle.setError("Obrigatório");
                     return;
                 }
 
