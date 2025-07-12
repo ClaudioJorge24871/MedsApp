@@ -66,6 +66,8 @@ public class BoxPageActivity extends AppCompatActivity {
             // Building MQTT Json message
             String message = buildJSONMessage("openbox", id).toString();
             publishMessage(topicPub, message);
+
+            //openBox.setEnabled(false);
         });
 
         //Subscribes to the LOGS topic
@@ -76,12 +78,16 @@ public class BoxPageActivity extends AppCompatActivity {
         mqttHandler.client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-
+                runOnUiThread(() -> Toast.makeText(BoxPageActivity.this, "MQTT connection lost", Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 changeLogBoxText(message);
+
+                //if (message.toString().equals("A caixa foi fechada")){
+                //    openBox.setEnabled(true);
+                //}
             }
 
             @Override

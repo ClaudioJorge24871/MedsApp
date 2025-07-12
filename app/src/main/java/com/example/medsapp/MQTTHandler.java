@@ -30,7 +30,12 @@ public class MQTTHandler {
 
             //Set up the connection options
             MqttConnectOptions connectOptions = new MqttConnectOptions();
+
+            connectOptions.setUserName("cjmgiot");
+            connectOptions.setPassword("vamospassarcom20".toCharArray());
+            connectOptions.setAutomaticReconnect(true);
             connectOptions.setCleanSession(true);
+
 
             //Connect the broker
             client.connect(connectOptions);
