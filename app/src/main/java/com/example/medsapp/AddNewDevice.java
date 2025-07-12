@@ -204,34 +204,42 @@ public class AddNewDevice extends AppCompatActivity {
             deviceId.setError("Obrigatório");
         }
 
-        String topicSub = "medsbox/" + deviceId.getText().toString().trim() + "/statusNet";
-        subscribeToTopic(topicSub);
 
         mqttHandler.client.setCallback(new MqttCallback() {
             @Override
-            public void connectionLost(Throwable cause) {
+            public void connectionLost(Throwable cause) { }
 
+            @Override
+            public void messageArrived(String topic, MqttMessage message) {
+                final String msg = message.toString();
+
+                runOnUiThread(() -> {
+                    if (msg.equals("connected")) {
+                        timeoutHandler.removeCallbacks(timeoutRunnable);
+
+                        loadingLayout.setVisibility(View.INVISIBLE);
+                        semRedeLabel.setText("A caixa foi conectada com sucesso!");
+
+                        addDeviceButton.setEnabled(true);
+                        addDeviceButton.setText("Guardar");
+
+                        addListenertoButton(addDeviceButton);
+                    } else {
+                        timeoutHandler.removeCallbacks(timeoutRunnable);
+
+                        loadingLayout.setVisibility(View.INVISIBLE);
+                        semRedeLabel.setText(
+                                "Não foi possível conectar a caixa à rede desejada. Por favor tente novamente"
+                        );
+                    }
+                });
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if(message.toString().equals("connected")){
-                    timeoutHandler.removeCallbacks(timeoutRunnable);
-                    loadingLayout.setVisibility(View.INVISIBLE);
-                    semRedeLabel.setText("A caixa foi conectada com sucesso!");
-                    addDeviceButton.setText("Guardar");
-                    addListenertoButton(addDeviceButton);
-                }else{
-                    timeoutHandler.removeCallbacks(timeoutRunnable);
-                    semRedeLabel.setText("Não foi possivel conectar a caixa à rede desejada. Por favor tente novamente");
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
+            public void deliveryComplete(IMqttDeliveryToken token) { }
         });
+        String topicSub = "medsbox/" + deviceId.getText().toString().trim() + "/statusNet";
+        subscribeToTopic(topicSub);
         timeoutRunnable = new Runnable() {
             @Override
             public void run() {
