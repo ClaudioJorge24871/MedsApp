@@ -137,6 +137,7 @@ public class AddNewDevice extends AppCompatActivity {
                     deviceId.setError("Obrigatório");
                     return;
                 }
+                addDeviceButton.setEnabled(false);
 
                 WifiNetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                         .setSsid("ESP-CONFIG")

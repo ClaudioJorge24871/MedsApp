@@ -32,7 +32,7 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desText"
-        app:layout_constraintVertical_bias="0.953" />
+        app:layout_constraintVertical_bias="0.934" />
 
     <TextView
         android:id="@+id/addDeviceTitle"
@@ -156,13 +156,17 @@
 
     <Button
         android:id="@+id/hideWebViewButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fechar"
+        android:layout_width="328dp"
+        android:layout_height="44dp"
         android:layout_margin="16dp"
+        android:backgroundTint="#077A6D"
+        android:text="Voltar"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintVertical_bias="0.976" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
