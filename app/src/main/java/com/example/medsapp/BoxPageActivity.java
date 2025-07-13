@@ -75,6 +75,10 @@ public class BoxPageActivity extends AppCompatActivity {
         String topicSub = "medsbox/" + id + "/logs";
         subscribeToTopic(topicSub);
 
+        // Subscribes to the LWT topic
+        String lwttopic = "medsbox/" + id + "/rpilwt";
+        subscribeToTopic(lwttopic);
+
         mqttHandler.client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
