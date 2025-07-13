@@ -54,7 +54,7 @@ public class AddNewDevice extends AppCompatActivity {
 
     //----------------MQTT Elements----------------------//
     private static final String BROKER_URL = "tcp://medsboxbroker.duckdns.org:1883";    // Broker URl for connection
-    private static final String CLIENT_ID = "claudRPI";                     // Client Id
+    private static String CLIENT_ID = "";                                           // Client Id
     private MQTTHandler mqttHandler;                                        // Mqtt object
 
 
@@ -63,6 +63,9 @@ public class AddNewDevice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_new_device);
+
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        CLIENT_ID = prefs.getString("client_id", null);
 
         connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 

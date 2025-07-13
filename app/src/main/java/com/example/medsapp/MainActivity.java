@@ -1,6 +1,8 @@
 package com.example.medsapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        String clientId = getOrCreateClientId(this);
+        System.out.println("Identificador do cliente: " + clientId);
 
         //----------Constructors
 
@@ -103,6 +109,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Generates a UUID for the user and uses it as MQTT clientID
+     * @param context
+     * @return
+     */
+    private String getOrCreateClientId(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String clientId = prefs.getString("client_id", null);
+
+        if (clientId == null) {
+            clientId = UUID.randomUUID().toString();
+            prefs.edit().putString("client_id", clientId).apply();
+        }
+
+        return clientId;
     }
 
 

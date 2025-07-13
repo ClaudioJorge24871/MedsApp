@@ -1,5 +1,6 @@
 package com.example.medsapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,7 @@ public class BoxPageActivity extends AppCompatActivity {
 
     //----------------MQTT Elements----------------------//
     private static final String BROKER_URL = "tcp://medsboxbroker.duckdns.org:1883";    // Broker URl for connection
-    private static final String CLIENT_ID = "claudRPI";                     // Client Id
+    private static String CLIENT_ID = "";                     // Client Id
     private MQTTHandler mqttHandler;                                        // Mqtt object
 
     @Override
@@ -39,6 +40,9 @@ public class BoxPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_box_page);
+
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        CLIENT_ID = prefs.getString("client_id", null);
 
         connectToBroker(); // Connect to broker
 
